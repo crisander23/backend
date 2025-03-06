@@ -1,21 +1,24 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const app = express();
-const port = 5572;
 const path = require('path');
+require('dotenv').config(); // Load .env variables
+
+const app = express();
+const port = process.env.PORT || 5572; // Use env variable or default to 5572
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Create a database connection pool using .env variables
 const pool = mysql.createPool({
-  host: '120.28.166.211',
-  user: 'root',
-  password: 'root',
-  database: 'patient_portal',
-  port: 5568,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
 
 // Global error handling for large payloads
